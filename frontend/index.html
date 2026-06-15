@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Recognition Attendance System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- ============ HEADER ============ -->
+    <header>
+      <h1>Face Recognition Attendance</h1>
+      <p class="subtitle">Real-time automated attendance system &mdash; point the camera at students</p>
+    </header>
+
+    <!-- ============ ATTENDANCE CONTROLS ============ -->
+    <div class="attendance-controls">
+      <button id="startAttendanceBtn" class="btn btn-primary btn-lg">
+        &#x1F4C5; Start Attendance
+      </button>
+      <button id="stopAttendanceBtn" class="btn btn-danger btn-lg" disabled>
+        &#x25A0; Stop Session
+      </button>
+      <span id="sessionStatus" class="session-badge inactive">No active session</span>
+    </div>
+
+    <!-- ============ MAIN GRID ============ -->
+    <div class="main-grid">
+
+      <!-- -------- LEFT COLUMN: CAMERA -------- -->
+      <div class="card camera-card">
+        <div class="card-header">
+          <h2>&#x1F4F7; Camera Feed</h2>
+          <div class="controls">
+            <button id="startBtn" class="btn btn-success">&#x25B6; Start Camera</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>&#x25A0; Stop</button>
+          </div>
+        </div>
+
+        <div id="videoContainer" class="video-container">
+          <video id="video" autoplay playsinline></video>
+          <!-- Overlay canvas for drawing face boxes -->
+          <canvas id="overlay" class="video-overlay"></canvas>
+          <canvas id="captureCanvas" style="display:none;"></canvas>
+          <div class="video-placeholder" id="placeholder">
+            <span class="placeholder-icon">&#x1F4F8;</span>
+            <p>Camera is off<br /><small>Click <strong>Start Camera</strong> to begin</small></p>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <span id="statusText" class="status inactive">Waiting to start&hellip;</span>
+        </div>
+      </div>
+
+      <!-- -------- RIGHT COLUMN: RESULTS -------- -->
+      <div class="card info-card">
+        <div class="card-header">
+          <h2>&#x1F9D1;&#x200D;&#x1F393; Recognised Faces</h2>
+        </div>
+
+        <!-- Attendance summary counts -->
+        <div class="summary-row">
+          <div class="summary-item present">
+            <span class="summary-label">Present</span>
+            <span id="presentCount" class="summary-value">0</span>
+          </div>
+          <div class="summary-item absent">
+            <span class="summary-label">Absent</span>
+            <span id="absentCount" class="summary-value">0</span>
+          </div>
+          <div class="summary-item total">
+            <span class="summary-label">Total</span>
+            <span id="totalCount" class="summary-value">0</span>
+          </div>
+          <div class="summary-item percentage">
+            <span class="summary-label">Percent</span>
+            <span id="percentCount" class="summary-value">0%</span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Faces detected in current frame -->
+        <div id="faceList" class="face-list">
+          <p class="face-list-empty"><em>No faces detected yet&hellip;</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TABS + STUDENT TABLE ============ -->
+    <div class="card students-card">
+      <div class="card-header">
+        <h2>&#x1F4CB; Student Attendance</h2>
+        <div class="tab-bar" id="tabBar">
+          <button class="tab active" data-tab="all">All</button>
+          <button class="tab" data-tab="present">Present</button>
+          <button class="tab" data-tab="absent">Absent</button>
+        </div>
+      </div>
+      <div class="student-table-wrapper">
+        <table class="student-table" id="studentTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Student Name</th>
+              <th>Status</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="studentBody">
+            <tr><td colspan="4" class="empty-msg">No students enrolled yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ ENROLL SECTION ============ -->
+    <div class="card enroll-card">
+      <div class="card-header">
+        <h2>&#x2795; Enroll New Student</h2>
+      </div>
+      <div class="enroll-form">
+        <input type="text" id="enrollName" placeholder="Enter student name" class="input" />
+        <button id="enrollBtn" class="btn btn-primary">Capture &amp; Enroll</button>
+      </div>
+      <p class="enroll-hint">
+        Type a name, then click the button while the student&rsquo;s face is visible on camera.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ============ MODAL ============ -->
+  <div id="timeModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>&#x23F0; Set Attendance Time Window</h2>
+      </div>
+      <div class="modal-body">
+        <p>Attendance will only be marked between these times.</p>
+        <div class="modal-form">
+          <div class="modal-field">
+            <label for="startTime">Start Time</label>
+            <input type="time" id="startTime" class="input" value="09:00" />
+          </div>
+          <div class="modal-field">
+            <label for="endTime">End Time</label>
+            <input type="time" id="endTime" class="input" value="17:00" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalCancelBtn" class="btn btn-secondary">Cancel</button>
+        <button id="modalConfirmBtn" class="btn btn-primary">&#x2714; Start Session</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

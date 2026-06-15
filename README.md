@@ -6,12 +6,17 @@ A real-time face recognition attendance system using InsightFace and FastAPI. Th
 
 ```
 Face-Detection-Attendance-System/
-├── fastAPI-backend/          # FastAPI server
+├── fastAPI-backend/          # FastAPI backend
 │   ├── app/
-│   │   ├── main.py           # API routes + static file serving
-│   │   ├── face_engine.py    # InsightFace wrapper
+│   │   ├── main.py           # Entry point — app, CORS, router includes
 │   │   ├── db.py             # PostgreSQL connection
-│   │   ├── models.py         # (reserved)
+│   │   ├── face_engine.py    # InsightFace face detection & embedding
+│   │   ├── schemas.py        # Pydantic request/response models
+│   │   ├── state.py          # In-memory attendance session state
+│   │   ├── routes/
+│   │   │   ├── enroll.py     # POST /enroll — register new student
+│   │   │   ├── recognize.py  # POST /recognize — detect & match faces
+│   │   │   └── attendance.py # Attendance session CRUD + summary
 │   │   └── __init__.py
 │   ├── requirements.txt
 │   └── env/                  # Python virtual environment
@@ -58,13 +63,13 @@ pip install -r requirements.txt
 
 ### 4. Configure the database
 
-Ensure PostgreSQL is running, then create a database named `pl-fastapi`:
+Ensure PostgreSQL is running, then create a database named `face-detection-db`:
 
 ```bash
-psql -U postgres -c "CREATE DATABASE pl-fastapi"
+psql -U postgres -c "CREATE DATABASE face-detection-db"
 ```
 
-Update credentials in `app/db.py` if needed (default: user `postgres`, password `1234`, db `pl-fastapi`).
+Update credentials in `app/db.py` if needed (default: user `postgres`, password `1234`, db `face-detection-db`).
 
 ## Running
 
@@ -91,11 +96,7 @@ The server starts on **`http://0.0.0.0:8080`**.
 | POST   | `/attendance/stop`      | Stop the current session           |
 | GET    | `/attendance/session`   | Get current session status         |
 | GET    | `/attendance/summary`   | Today's attendance summary         |
-| GET    | `/courses`              | List all courses                   |
-| POST   | `/course/add`           | Add a new course                   |
-| GET    | `/course/{id}`          | Get course by ID                   |
-| PUT    | `/course/{id}`          | Update a course                    |
-| DELETE | `/course/{id}`          | Delete a course                    |
+
 
 ## Notes
 

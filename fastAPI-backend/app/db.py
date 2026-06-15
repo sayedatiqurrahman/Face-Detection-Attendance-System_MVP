@@ -6,7 +6,7 @@ while True:
     try:
         connection = psycopg2.connect(
             host="localhost",
-            database="pl-fastapi",
+            database="face-detection-db",
             user="postgres",
             password="1234",
             cursor_factory=RealDictCursor,

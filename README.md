@@ -6,7 +6,7 @@ A real-time face recognition attendance system using InsightFace and FastAPI. Th
 
 ```
 Face-Detection-Attendance-System/
-├── fastAPI-backend/          # FastAPI backend
+├── backend/                  # FastAPI backend
 │   ├── app/
 │   │   ├── main.py           # Entry point — app, CORS, router includes
 │   │   ├── db.py             # PostgreSQL connection
@@ -46,7 +46,7 @@ cd Face-Detection-Attendance-System
 ### 2. Create virtual environment
 
 ```bash
-cd fastAPI-backend
+cd backend
 python -m venv env
 ```
 
@@ -74,7 +74,7 @@ Update credentials in `app/db.py` if needed (default: user `postgres`, password 
 ## Running
 
 ```bash
-# From the fastAPI-backend directory (with venv activated)
+# From the backend directory (with venv activated)
 python -m app.main
 ```
 
